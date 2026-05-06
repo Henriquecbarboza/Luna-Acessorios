@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loja de Roupas - Gerenciamento</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+  <div class="logo">👗</div>
+  <div>
+    <h1>Gerenciamento de Roupas - Luna Acessórios</h1>
+    <p>Controle de estoque e cadastro de produtos</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="num" id="stat-total">—</div>
+      <div class="label">Total de Produtos</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-quantidade">—</div>
+      <div class="label">Peças em Estoque</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-valor">—</div>
+      <div class="label">Valor Total em Estoque</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-baixo">—</div>
+      <div class="label">Qtd. Baixa (≤ 5 un.)</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-group">
+      <input type="text" id="search" placeholder="🔍 Buscar..." oninput="filtrar()" />
+      <select id="tipo-busca" onchange="atualizarPlaceholder()">
+        <option value="produto">por Produto</option>
+        <option value="codigo">por Código</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="abrirModal()">➕ Novo Produto</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Produto</th>
+          <th>Tamanho</th>
+          <th>Cor</th>
+          <th>Preço Unit.</th>
+          <th>Quantidade</th>
+          <th>Valor em Estoque</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabela-body">
+        <tr><td colspan="8" class="loading"><div class="spinner"></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="fecharModalFora(event)">
+  <div class="modal">
+    <h2 id="modal-titulo">➕ Novo Produto</h2>
+
+    <input type="hidden" id="edit-id" />
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Código *</label>
+        <input type="text" id="f-codigo" placeholder="Ex: CAM-001" />
+      </div>
+      <div class="form-group">
+        <label>Produto *</label>
+        <input type="text" id="f-produto" placeholder="Ex: Camiseta Básica" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Tamanho *</label>
+        <select id="f-tamanho">
+          <optgroup label="── Letras ──">
+            <option>PP</option>
+            <option>P</option>
+            <option>M</option>
+            <option>G</option>
+            <option>GG</option>
+            <option>XGG</option>
+            <option>Único</option>
+          </optgroup>
+          <optgroup label="── Números ──">
+            <option>34</option>
+            <option>36</option>
+            <option>38</option>
+            <option>40</option>
+            <option>42</option>
+            <option>44</option>
+            <option>46</option>
+            <option>48</option>
+            <option>50</option>
+            <option>52</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Cor</label>
+        <input type="text" id="f-cor" placeholder="Ex: Azul, Preto..." />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Preço Unitário (R$) *</label>
+        <input type="number" id="f-preco" placeholder="0.00" min="0" step="0.01" oninput="atualizarPreview()" />
+      </div>
+      <div class="form-group">
+        <label>Quantidade</label>
+        <input type="number" id="f-quantidade" placeholder="0" min="0" oninput="atualizarPreview()" />
+      </div>
+    </div>
+
+    <div class="valor-preview" id="valor-preview" style="display:none">
+      📦 Valor em Estoque: <strong id="preview-valor">R$ 0,00</strong>
+    </div>
+
+    <div class="form-group">
+      <label>Descrição</label>
+      <textarea id="f-descricao" rows="2" placeholder="Detalhes opcionais sobre a peça..."></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="fecharModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvar()">💾 Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

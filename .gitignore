@@ -1,0 +1,36 @@
+# ══════════════════════════════════════
+# ARQUIVOS IGNORADOS PELO GIT
+# Estes arquivos NÃO serão enviados ao GitHub
+# ══════════════════════════════════════
+
+# Maven — pasta de build gerada automaticamente
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# IDEs
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+*.classpath
+*.project
+*.settings/
+
+# Arquivo de credenciais locais — NUNCA suba isso!
+# Crie este arquivo localmente com suas senhas reais
+.env
+application-local.properties
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# application.properties contém sua senha do banco — NUNCA suba!
+src/main/resources/application.properties
