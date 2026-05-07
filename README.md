@@ -52,6 +52,4 @@ http://localhost:8080
 | PUT | `/api/roupas/{id}` | Atualiza uma roupa |
 | DELETE | `/api/roupas/{id}` | Remove uma roupa |
 
-## 🔐 Segurança das credenciais
-O arquivo `application.properties` está listado no `.gitignore` e **nunca será enviado ao GitHub**.
-Quem clonar o projeto precisa criar o próprio `application.properties` a partir do `.exemplo`.
+
