@@ -4,8 +4,15 @@ import com.lunaacessorios.estoque.entity.Roupa;
 import com.lunaacessorios.estoque.service.RoupaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/roupas")
@@ -39,8 +46,14 @@ public class RoupaController {
 
     @PostMapping
     public ResponseEntity<Roupa> criar(@RequestBody Roupa roupa) {
-        Roupa salva = service.salvar(roupa);
-        return ResponseEntity.status(201).body(salva);
+        return ResponseEntity.status(201).body(service.salvar(roupa));
+    }
+
+    @PostMapping("/lote")
+    public ResponseEntity<List<Roupa>> criarLote(
+            @RequestBody Roupa roupa,
+            @RequestParam(defaultValue = "1") int quantidade) {
+        return ResponseEntity.status(201).body(service.salvarLote(roupa, quantidade));
     }
 
     @PutMapping("/{id}")
@@ -50,11 +63,54 @@ public class RoupaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PostMapping("/{id}/venda")
+    public ResponseEntity<Roupa> registrarVenda(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+        String comprador = body.getOrDefault("comprador", "");
+        String dataStr   = body.getOrDefault("dataVenda", null);
+        java.time.LocalDate dataVenda = dataStr != null && !dataStr.isBlank()
+            ? java.time.LocalDate.parse(dataStr)
+            : null;
+        return service.registrarVenda(id, comprador, dataVenda)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}/venda")
+    public ResponseEntity<Roupa> editarVenda(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+        String comprador = body.getOrDefault("comprador", "");
+        String dataStr   = body.getOrDefault("dataVenda", null);
+        java.time.LocalDate dataVenda = dataStr != null && !dataStr.isBlank()
+            ? java.time.LocalDate.parse(dataStr)
+            : null;
+        return service.editarVenda(id, comprador, dataVenda)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{id}/imagem")
+    public ResponseEntity<Roupa> uploadImagem(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file) {
+        return service.salvarImagem(id, file)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/lote/imagem")
+    public ResponseEntity<Void> uploadImagemLote(
+            @RequestParam("ids") List<Long> ids,
+            @RequestParam("file") MultipartFile file) {
+        service.salvarImagemParaLote(ids, file);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        if (service.deletar(id)) {
-            return ResponseEntity.noContent().build();
-        }
+        if (service.deletar(id)) return ResponseEntity.noContent().build();
         return ResponseEntity.notFound().build();
     }
 }

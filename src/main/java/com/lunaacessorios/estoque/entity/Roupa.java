@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "roupas")
@@ -17,7 +18,7 @@ public class Roupa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String codigo;
 
     @Column(nullable = false)
@@ -37,6 +38,18 @@ public class Roupa {
 
     @Column
     private String descricao;
+
+    @Column
+    private String imagem;
+
+    @Column(nullable = false)
+    private Boolean vendido = false;
+
+    @Column
+    private String comprador;
+
+    @Column
+    private LocalDate dataVenda;
 
     @Transient
     @JsonProperty("valorTotal")

@@ -3,55 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Loja de Roupas - Gerenciamento</title>
+  <title>Luna Acessórios - Estoque</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <header>
   <div class="logo">👗</div>
-  <div>
-    <h1>Gerenciamento de Roupas - Luna Acessórios</h1>
-    <p>Controle de estoque e cadastro de produtos</p>
+  <div class="header-text">
+    <h1>Luna Acessórios</h1>
+    <p>Gerenciamento de Estoque</p>
   </div>
 </header>
 
 <div class="container">
 
+  <!-- DASHBOARD -->
   <div class="stats">
     <div class="stat-card">
-      <div class="num" id="stat-total">—</div>
       <div class="label">Total de Produtos</div>
+      <div class="stat-icon">📦</div>
+      <div class="num" id="stat-total">—</div>
     </div>
     <div class="stat-card">
-      <div class="num" id="stat-quantidade">—</div>
       <div class="label">Peças em Estoque</div>
+      <div class="stat-icon">🧺</div>
+      <div class="num" id="stat-quantidade">—</div>
     </div>
     <div class="stat-card">
-      <div class="num" id="stat-valor">—</div>
       <div class="label">Valor Total em Estoque</div>
+      <div class="stat-icon">💰</div>
+      <div class="num" id="stat-valor">—</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card stat-alert">
+      <div class="label">Estoque Baixo (≤ 5 un.)</div>
+      <div class="stat-icon">⚠️</div>
       <div class="num" id="stat-baixo">—</div>
-      <div class="label">Qtd. Baixa (≤ 5 un.)</div>
+    </div>
+    <div class="stat-card stat-highlight">
+      <div class="label">Produto Mais Caro</div>
+      <div class="stat-icon">💎</div>
+      <div class="num" id="stat-mais-caro-preco">—</div>
+      <div class="stat-sub" id="stat-mais-caro-nome">—</div>
+    </div>
+    <div class="stat-card stat-vendido">
+      <div class="label">Vendidos</div>
+      <div class="stat-icon">🛍️</div>
+      <div class="num" id="stat-vendidos">—</div>
     </div>
   </div>
 
+  <!-- TOOLBAR -->
   <div class="toolbar">
     <div class="search-group">
-      <input type="text" id="search" placeholder="🔍 Buscar..." oninput="filtrar()" />
+      <input type="text" id="search" placeholder="🔍 Buscar por produto..." oninput="filtrar()" />
       <select id="tipo-busca" onchange="atualizarPlaceholder()">
         <option value="produto">por Produto</option>
         <option value="codigo">por Código</option>
       </select>
     </div>
+    <div class="toolbar-filtros">
+      <select id="filtro-status" onchange="filtrar()">
+        <option value="todos">Todos</option>
+        <option value="estoque">Em Estoque</option>
+        <option value="vendido">Vendidos</option>
+      </select>
+    </div>
     <button class="btn btn-primary" onclick="abrirModal()">➕ Novo Produto</button>
   </div>
 
+  <!-- TABELA -->
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
+          <th>Foto</th>
           <th>Código</th>
           <th>Produto</th>
           <th>Tamanho</th>
@@ -59,30 +85,31 @@
           <th>Preço Unit.</th>
           <th>Quantidade</th>
           <th>Valor em Estoque</th>
+          <th>Status</th>
           <th>Ações</th>
         </tr>
       </thead>
       <tbody id="tabela-body">
-        <tr><td colspan="8" class="loading"><div class="spinner"></div></td></tr>
+        <tr><td colspan="10" class="loading"><div class="spinner"></div></td></tr>
       </tbody>
     </table>
   </div>
 </div>
 
+<!-- MODAL CADASTRO / EDIÇÃO -->
 <div class="overlay" id="overlay" onclick="fecharModalFora(event)">
   <div class="modal">
     <h2 id="modal-titulo">➕ Novo Produto</h2>
-
     <input type="hidden" id="edit-id" />
 
     <div class="form-row">
       <div class="form-group">
         <label>Código *</label>
-        <input type="text" id="f-codigo" placeholder="Ex: CAM-001" />
+        <input type="text" id="f-codigo" placeholder="Ex: 1151120" />
       </div>
       <div class="form-group">
         <label>Produto *</label>
-        <input type="text" id="f-produto" placeholder="Ex: Camiseta Básica" />
+        <input type="text" id="f-produto" placeholder="Ex: Calça com Recorte" />
       </div>
     </div>
 
@@ -91,25 +118,13 @@
         <label>Tamanho *</label>
         <select id="f-tamanho">
           <optgroup label="── Letras ──">
-            <option>PP</option>
-            <option>P</option>
-            <option>M</option>
-            <option>G</option>
-            <option>GG</option>
-            <option>XGG</option>
-            <option>Único</option>
+            <option>PP</option><option>P</option><option>M</option>
+            <option>G</option><option>GG</option><option>XGG</option><option>Único</option>
           </optgroup>
           <optgroup label="── Números ──">
-            <option>34</option>
-            <option>36</option>
-            <option>38</option>
-            <option>40</option>
-            <option>42</option>
-            <option>44</option>
-            <option>46</option>
-            <option>48</option>
-            <option>50</option>
-            <option>52</option>
+            <option>34</option><option>36</option><option>38</option><option>40</option>
+            <option>42</option><option>44</option><option>46</option><option>48</option>
+            <option>50</option><option>52</option>
           </optgroup>
         </select>
       </div>
@@ -125,8 +140,17 @@
         <input type="number" id="f-preco" placeholder="0.00" min="0" step="0.01" oninput="atualizarPreview()" />
       </div>
       <div class="form-group">
-        <label>Quantidade</label>
-        <input type="number" id="f-quantidade" placeholder="0" min="0" oninput="atualizarPreview()" />
+        <label>Quantidade por unidade</label>
+        <input type="number" id="f-quantidade" placeholder="1" min="1" value="1" oninput="atualizarPreview()" />
+      </div>
+    </div>
+
+    <!-- Campo lote: só aparece no cadastro novo -->
+    <div class="form-group" id="grupo-lote">
+      <label>Cadastrar em lote <span class="label-hint">(quantas unidades adicionar de uma vez)</span></label>
+      <div class="lote-group">
+        <input type="number" id="f-lote" placeholder="1" min="1" value="1" />
+        <span class="lote-hint" id="lote-hint">1 unidade será cadastrada</span>
       </div>
     </div>
 
@@ -136,7 +160,20 @@
 
     <div class="form-group">
       <label>Descrição</label>
-      <textarea id="f-descricao" rows="2" placeholder="Detalhes opcionais sobre a peça..."></textarea>
+      <textarea id="f-descricao" rows="2" placeholder="Detalhes opcionais..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Foto do Produto</label>
+      <div class="upload-area" id="upload-area" onclick="document.getElementById('f-imagem').click()">
+        <img id="img-preview" src="" alt="" style="display:none" />
+        <div id="upload-placeholder">
+          <span class="upload-icon">📷</span>
+          <p>Clique para selecionar uma imagem</p>
+          <small>JPG, PNG ou WEBP • máx. 10MB</small>
+        </div>
+      </div>
+      <input type="file" id="f-imagem" accept="image/*" style="display:none" onchange="previewImagem(event)" />
     </div>
 
     <div class="modal-actions">
@@ -146,9 +183,54 @@
   </div>
 </div>
 
+<!-- MODAL VENDA -->
+<div class="overlay" id="overlay-venda" onclick="fecharVendaFora(event)">
+  <div class="modal modal-venda">
+    <h2 id="venda-titulo">🛍️ Registrar Venda</h2>
+    <input type="hidden" id="venda-id" />
+    <input type="hidden" id="venda-modo" value="novo" />
+    <p id="venda-produto-nome" class="venda-nome"></p>
+
+    <div class="form-group">
+      <label>Nome do Comprador *</label>
+      <input type="text" id="f-comprador" placeholder="Ex: Maria Silva" />
+    </div>
+
+    <div class="form-group">
+      <label>Data da Venda *</label>
+      <input type="date" id="f-data-venda" />
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="fecharVenda()">Cancelar</button>
+      <button class="btn btn-success" onclick="confirmarVenda()">✅ Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONFIRMAÇÃO EXCLUSÃO -->
+<div class="overlay" id="overlay-confirm" onclick="negarConfirm()">
+  <div class="modal modal-confirm">
+    <div class="confirm-icon">🗑️</div>
+    <h2 id="confirm-titulo">Excluir produto?</h2>
+    <p id="confirm-msg"></p>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="negarConfirm()">Cancelar</button>
+      <button class="btn btn-danger" id="confirm-ok">Sim, excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="fecharLightbox()">
+  <button class="lightbox-close" onclick="fecharLightbox()">✕</button>
+  <div class="lightbox-content" onclick="event.stopPropagation()">
+    <img id="lightbox-img" src="" alt="" />
+    <p id="lightbox-caption"></p>
+  </div>
+</div>
+
 <div id="toast"></div>
-
 <script src="app.js"></script>
-
 </body>
 </html>
