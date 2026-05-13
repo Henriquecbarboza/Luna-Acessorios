@@ -1,17 +1,52 @@
-# 👗 Loja de Roupas — CRUD com Spring Boot + MySQL
+# 👗 Luna Acessórios — Sistema de Gerenciamento de Estoque
 
-Sistema de gerenciamento de estoque de roupas com interface web.
+Sistema completo de gerenciamento de estoque para loja de roupas, com interface web, dashboard, controle de vendas e upload de imagens.
+
+---
 
 ## 🛠️ Tecnologias
+
 - **Back-end:** Java 21 + Spring Boot 3.4 + Spring Data JPA
 - **Banco de dados:** MySQL
 - **Front-end:** HTML, CSS e JavaScript puro (servido pelo próprio Spring Boot)
 
+---
+
+## ✨ Funcionalidades
+
+- ✅ Cadastro, edição e exclusão de produtos
+- ✅ Cadastro em **lote** — adiciona N unidades do mesmo produto de uma vez
+- ✅ **Upload de imagem** por produto com preview e lightbox ao clicar
+- ✅ **Dashboard** com cards de resumo em tempo real
+- ✅ Registro de **vendas** com nome do comprador e data
+- ✅ Edição dos dados de venda (comprador e data)
+- ✅ Filtro por status: Em Estoque / Vendidos / Todos
+- ✅ Busca por nome do produto ou por código
+- ✅ Layout **responsivo** para mobile
+- ✅ Modal de confirmação estilizado para exclusão
+
+---
+
+## 📊 Dashboard
+
+| Card | Descrição |
+|------|-----------|
+| 📦 Total de Produtos | Todos os registros cadastrados |
+| 🧺 Peças em Estoque | Soma das quantidades disponíveis |
+| 💰 Valor Total em Estoque | Preço × Quantidade de cada item |
+| ⚠️ Estoque Baixo | Produtos com 5 ou menos unidades |
+| 💎 Produto Mais Caro | Nome e preço do item mais valioso |
+| 🛍️ Vendidos | Total de itens com status vendido |
+
+---
+
 ## 📁 Estrutura do Projeto
+
 ```
 src/
 ├── main/
 │   ├── java/.../
+│   │   ├── config/         → UploadConfig.java (configuração de imagens)
 │   │   ├── entity/         → Roupa.java (representa a tabela do banco)
 │   │   ├── repository/     → RoupaRepository.java (acesso ao banco)
 │   │   ├── service/        → RoupaService.java (regras de negócio)
@@ -21,35 +56,71 @@ src/
 │       │   ├── index.html  → Interface web
 │       │   ├── style.css   → Estilos visuais
 │       │   └── app.js      → Lógica do front-end
-│       └── application.properties  ← NÃO vai ao GitHub (tem suas senhas)
+│       └── application.properties  ← NÃO vai ao GitHub (contém suas credenciais)
+uploads/                            ← Imagens dos produtos (gerada automaticamente)
 ```
+
+---
 
 ## 🚀 Como rodar localmente
 
 ### 1. Configure o banco de dados
+
 Copie o arquivo de exemplo e preencha com suas credenciais:
+
 ```bash
 cp src/main/resources/application.properties.exemplo src/main/resources/application.properties
 ```
-Edite o `application.properties` com seu usuário e senha do MySQL.
+
+Edite o `application.properties` com seu usuário e senha do MySQL:
+
+```properties
+spring.datasource.username=SEU_USUARIO
+spring.datasource.password=SUA_SENHA
+```
+
+O banco `luna_acessorios` é criado automaticamente na primeira execução.
 
 ### 2. Execute o projeto
+
 ```bash
 ./mvnw spring-boot:run
 ```
 
 ### 3. Acesse no navegador
+
 ```
 http://localhost:8080
 ```
 
+A pasta `uploads/` para armazenar as imagens também é criada automaticamente.
+
+---
+
 ## 🔗 Endpoints da API REST
+
 | Método | URL | Descrição |
 |--------|-----|-----------|
-| GET | `/api/roupas` | Lista todas as roupas |
-| GET | `/api/roupas/{id}` | Busca uma roupa por ID |
-| POST | `/api/roupas` | Cria uma nova roupa |
-| PUT | `/api/roupas/{id}` | Atualiza uma roupa |
-| DELETE | `/api/roupas/{id}` | Remove uma roupa |
+| GET | `/api/roupas` | Lista todos os produtos |
+| GET | `/api/roupas/{id}` | Busca produto por ID |
+| GET | `/api/roupas/buscar?termo=X&tipo=produto` | Busca por nome ou código |
+| POST | `/api/roupas` | Cadastra novo produto |
+| POST | `/api/roupas/lote?quantidade=N` | Cadastra N produtos em lote |
+| PUT | `/api/roupas/{id}` | Atualiza produto |
+| DELETE | `/api/roupas/{id}` | Remove produto |
+| POST | `/api/roupas/{id}/imagem` | Faz upload da imagem |
+| POST | `/api/roupas/lote/imagem?ids=1,2,3` | Upload de imagem para lote |
+| POST | `/api/roupas/{id}/venda` | Registra venda |
+| PUT | `/api/roupas/{id}/venda` | Edita dados da venda |
 
+---
 
+## 🔐 Segurança das credenciais
+
+O arquivo `application.properties` está no `.gitignore` e **nunca é enviado ao GitHub**.
+
+Quem clonar o projeto deve criar o próprio `application.properties` a partir do `.exemplo`:
+
+```bash
+cp src/main/resources/application.properties.exemplo src/main/resources/application.properties
+```
