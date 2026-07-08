@@ -1,4 +1,4 @@
-# 👗 Luna Acessórios — Sistema de Gerenciamento de Estoque
+# 👗 Luna Acessórios — Sistema de Gerenciamento de Estoque e Vendas
 
 Sistema completo de gerenciamento de estoque para loja de roupas, com interface web, dashboard, controle de vendas e upload de imagens.
 
