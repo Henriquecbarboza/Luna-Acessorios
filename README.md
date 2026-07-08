@@ -4,6 +4,12 @@ Sistema completo de gerenciamento de estoque para loja de roupas, com interface 
 
 ---
 
+<img width="1122" height="629" alt="Screenshot_4" src="https://github.com/user-attachments/assets/b4470690-d30a-4ab2-995d-17326ef719fc" />
+<img width="1126" height="634" alt="Screenshot_3" src="https://github.com/user-attachments/assets/f35f2a2a-e922-4a97-bbd9-56395fda6cfe" />
+<img width="1123" height="628" alt="Screenshot_2" src="https://github.com/user-attachments/assets/b5d64010-69d3-42e8-a654-579e99783beb" />
+<img width="1121" height="627" alt="Screenshot_1" src="https://github.com/user-attachments/assets/5c767eb3-0e0f-43db-89b8-723e3666efa0" />
+
+
 ## 🛠️ Tecnologias
 
 - **Back-end:** Java 21 + Spring Boot 3.4 + Spring Data JPA
